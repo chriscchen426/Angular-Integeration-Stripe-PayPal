@@ -1,0 +1,13 @@
+<header>
+  <h1>{{title}}</h1>
+  <nav>
+    <ul>
+      <li><a [routerLink]="['customer']">Customer</a></li>
+      <li><a [routerLink]="['stripe']">Stripe</a></li>
+      <li><a [routerLink]="['paypal']">PayPal</a></li>
+    </ul>
+  </nav>
+</header>
+<section id="main">
+  <router-outlet></router-outlet>
+</section>

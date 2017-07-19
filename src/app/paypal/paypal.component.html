@@ -1,0 +1,74 @@
+<h1>
+  {{title}}
+</h1>
+
+<div class="container">
+  <div class="panel panel-success">
+    <div class="panel-body">
+      <label class="label label-primary form-control">Enter the charge value in USD</label>
+      <form #form class="form-inline" name="_xclick" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="chaochen426@gmail.com">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="item_name" value="Paypal demo charge">
+        <input name="item_number" type="hidden" value="0001"/>
+        <input type="text" class="form-control" size="30" id="paypalAmount" name="amount"/>
+        <input type="hidden" name="return" value="https://localhost:4200/" />
+        <input type="hidden" name="cancel_return" value="https://localhost:4200/" />
+        <input type="hidden" name="custom" value={{title}}>
+        <!--pass your notification URL-->
+        <input name="notify_url" value="YOUR NOTIFICATION URL" type="hidden">
+        <br/>
+        <br/>
+        <input (click)="form.submit()" type="image" src="https://www.paypal.com/en_US/i/btn/btn_buynow_LG.gif" border="0"
+               name="submit" alt="Make payments with PayPal - it's fast, free and secure!"/>
+      </form>
+    </div>
+  </div>
+  <br />
+  <div id="paypal-button-container"></div>
+</div>
+
+
+<script>
+      paypal.Button.render({
+
+          env: 'sandbox', // sandbox | production
+
+          // PayPal Client IDs - replace with your own
+          // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+          client: {
+              sandbox:    'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+              production: '<insert production client id>'
+          },
+
+          // Show the buyer a 'Pay Now' button in the checkout flow
+          commit: true,
+
+          // payment() is called when the button is clicked
+          payment: function(data, actions) {
+
+              // Make a call to the REST api to create the payment
+              return actions.payment.create({
+                  payment: {
+                      transactions: [
+                          {
+                              amount: { total: '0.01', currency: 'USD' }
+                          }
+                      ]
+                  }
+              });
+          },
+
+          // onAuthorize() is called when the buyer approves the payment
+          onAuthorize: function(data, actions) {
+
+              // Make a call to the REST api to execute the payment
+              return actions.payment.execute().then(function() {
+                  window.alert('Payment Complete!');
+              });
+          }
+
+      }, '#paypal-button-container');
+
+  </script>
